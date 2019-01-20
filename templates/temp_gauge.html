@@ -1,0 +1,85 @@
+<div class="col-lg-3 col-sm-6">
+                        <div class="card">
+                            <div class="content">
+                                <div id="gauge-wrapper">
+                                    <div id="gauge"></div>
+                                </div>
+                                <script>
+                                    var pusher = new Pusher('16aabf8c06362b1e9be5', {
+                                        cluster: 'eu',
+                                        forceTLS: true
+                                    });
+
+                                    var channel = pusher.subscribe('channel');
+                                    channel.bind('event', function(data) {
+                                        var level = Math.abs(-15-(data))/30*180;
+
+                                    // Trig to calc meter point
+                                    var degrees = 180 - level,
+                                         radius = .5;
+                                    var radians = degrees * Math.PI / 180;
+                                    var x = radius * Math.cos(radians);
+                                    var y = radius * Math.sin(radians);
+
+                                    // Path: may have to change to create a better triangle
+                                    var mainPath = 'M -.0 -0.025 L .0 0.025 L ',
+                                         pathX = String(x),
+                                         space = ' ',
+                                         pathY = String(y),
+                                         pathEnd = ' Z';
+                                    var path = mainPath.concat(pathX,space,pathY,pathEnd);
+
+                                    var data = [{ type: 'scatter',
+                                       x: [0], y:[0],
+                                        marker: {size: 14, color:'850000'},
+                                        showlegend: false,
+                                        name: 'speed',
+                                        text: level,
+                                        hoverinfo: 'text+name'},
+                                      { values: [50/6, 50/6, 50/6, 50/6, 50/6, 50/6, 50],
+                                      rotation: 90,
+                                      textinfo: 'text',
+                                      textposition:'inside',      
+                                      marker: {colors:['#FFCD00', '#FFFAE0', '#E3F4FE', '#19C3FB',
+                                                             '#1C9CF6', '#1D71F2', 'rgba(255, 255, 255, 0)']},
+                                      hole: .2,
+                                      type: 'pie',
+                                      showlegend: false
+                                    }];
+
+                                    var layout = {
+                                      hovermode: false,
+                                      shapes:[{
+                                          type: 'path',
+                                          path: path,
+                                          fillcolor: '850000',
+                                          line: {
+                                            color: '850000'
+                                          }
+                                        }],
+                                        height: 200,
+                                      autosize: true,
+                                      margin: {
+                                        l: 0,
+                                        r: 0,
+                                        b: 0,
+                                        t: 0
+                                      },
+                                      xaxis: {zeroline:false, showticklabels:false,
+                                                 showgrid: false, range: [-1, 1]},
+                                      yaxis: {zeroline:false, showticklabels:false,
+                                                 showgrid: false, range: [-1, 1]}
+                                    };
+
+                                    Plotly.newPlot('gauge', data, layout, {showSendToCloud:true, responsive:true});
+                                  });
+                                </script>
+                                <div class="footer">
+                                    <hr />
+                                    <div class="stats">
+                                        <i class="ti-calendar"></i> Actual temperature
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>

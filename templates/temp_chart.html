@@ -1,0 +1,36 @@
+<div class="col-md-12">
+    <div class="card">
+        <div class="header">
+            <h4 class="title">Brno Temperature</h4>
+        </div>
+        <div class="content">
+            <div id="myDiv"></div>
+            <script>
+
+            var pusher = new Pusher('16aabf8c06362b1e9be5', {
+                cluster: 'eu',
+                forceTLS: true
+            });
+
+            var channel = pusher.subscribe('my-channel');
+            channel.bind('my-event', function(data) {
+                    var dat = [
+                    {
+                        x: data.x,
+                        y: data.y,
+                        type: 'scatter'
+                    }
+                ];
+
+                Plotly.newPlot('myDiv', dat, {}, {showSendToCloud: true, responsive: true});
+            });
+            </script>
+            <div class="footer">
+                <hr>
+                <div class="stats">
+                    <i class="ti-reload"></i> Updates every 10 minutes
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
