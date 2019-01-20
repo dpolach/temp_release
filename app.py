@@ -6,6 +6,8 @@ from apscheduler.triggers.interval import IntervalTrigger
 import requests
 import time
 import atexit
+import os
+
 
 pusher = Pusher(
 	app_id = '694790',
